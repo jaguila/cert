@@ -8,6 +8,7 @@ def lines(fp):
     print str(len(fp.readlines()))
 	
 def json_parse():
+	#parses json and takes only english tweets
 	#tfile = open('C:\Users\Dex\Documents\IPython Notebooks\cert\practweet.txt')
 	tfile=open(sys.argv[2])
 	tweet={}
@@ -36,6 +37,7 @@ def tweet_txt(tweets):
 	return status
 
 def sentiment(afindict,status):
+	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
 	statusdict={}
 	
 	for s in status:
@@ -58,6 +60,7 @@ def sentiment(afindict,status):
 
 	
 def afin():
+	#parses afin file
 	#file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
 	file =open(sys.argv[1])
 	scores={} # initialize an empty dictionary
