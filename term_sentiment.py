@@ -57,33 +57,32 @@ def nonsentscore(afindict,status):
 	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
     scoredict={}
     nid=0
-    for s in status:
-        score=0
-        for a in afindict.keys():
-            aa='\\b'+a+'\\b'
-            match=re.search((aa),s)
-            if match:
-                score=score+afindict[a]
-            else:
-                pass
-        scoredict[nid]=score
-        nid=nid+1
-       
     nafin={}   	
     nid2=0
     for s in status:
-        nscore=scoredict[nid2]
-	ssplit=s.split(' ')
-	nlen=float(len(ssplit))
-	wscore=float(nscore/nlen)
-        for s in ssplit:
-            if s not in afindict.keys():
-                nword=s
-                nafin[nword]=wscore
-            else:
-                pass
-            
-        nid2=nid2+1    
+		score=float(0)
+		ssplit=s.split(' ')
+		nword=[]
+		for s in ssplit:
+			num=float(0.0)
+			if s in afindict.keys():
+				score=score+afindict[s]
+			elif s not in afindict.keys():
+				nword.append(s)
+				#nword=s
+				#nafin[nword]=float(score/2)
+			else:
+				pass
+			num=num+1
+		nscore=score/(len(nword))
+		for n in nword:
+			nafin[n]=nscore
+		scoredict[nid]=score
+		#nscore=scoredict[nid]
+		#ssplit=s.split(' ')
+		#nlen=float(len(ssplit))
+		#wscore=float(nscore/nlen)
+		nid=nid+1
 
 #		print score
 		#print '\n'
