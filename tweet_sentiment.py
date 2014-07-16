@@ -10,6 +10,7 @@ def lines(fp):
 def json_parse():
 	#parses json and takes only english tweets
 	#tfile = open('C:\Users\Dex\Documents\IPython Notebooks\cert\practweet.txt')
+	#tfile=open('C:\dex\datascience\cert\practweet.txt')
 	tfile=open(sys.argv[2])
 	tweet={}
 	#tweets={}
@@ -46,7 +47,7 @@ def sentiment(afindict,status):
 			aa='\\b'+a+'\\b'
 			match=re.search((aa),s)
 			if match:
-				score=afindict[a]
+				score=score+afindict[a]
 				#print a
 			else:
 				pass
@@ -63,6 +64,7 @@ def afin():
 	#parses afin file
 	#file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
 	file =open(sys.argv[1])
+	#file=open('C:\dex\datascience\cert\AFINN-111.txt')	
 	scores={} # initialize an empty dictionary
 	ascores={}
 	for line in file:
@@ -75,7 +77,9 @@ def afin():
 def main():
 	#sent_file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
 	sent_file = open(sys.argv[1])
+	#sent_file=open('C:\dex\datascience\cert\AFINN-111.txt')	
 	#tweet_file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\practweet.txt')
+	#tweet_file=open('C:\dex\datascience\cert\practweet.txt')
 	tweet_file = open(sys.argv[2])
 	#hw()
 	#lines(sent_file)

@@ -1,39 +1,130 @@
 import sys
+import json
+import re
 
-def hw():
-    print 'Hello, world!'
+def json_parse():
+	#parses json and takes only english tweets
+	#tfile = open('C:\Users\Dex\Documents\IPython Notebooks\cert\practweet.txt')
+	tfile=open(sys.argv[2])
+	tweet={}
+	#tweets={}
+	tweets=[]
+	num=0
+	#below goes through each line of the twitter json and then checks if its english
+	for t in tfile:
+		tweet=json.loads(t)
+		#num=num+1
+		try:
+			if tweet['lang']=='en':
+				#tweets[num]=tweet
+				tweets.append(tweet)
+			else:
+				pass
+		except KeyError:
+			pass
+	return tweets
 
-def lines(fp):
-    print str(len(fp.readlines()))
+def tweet_txt(tweets):
+	#takes the text of each tweet and converts it to utf8. creates a list with every status in there
+	status=[]
+	for t in tweets:
+		status.append(t['text'].encode('utf-8'))
+	return status
 
-def main():
-    sent_file = open(sys.argv[1])
-    scores = {} # initialize an empty dictionary
-    new_terms = {} # dictionary of new terms
-    tweet_sentiment_score = 0
-    for line in sent_file:
-      term, score  = line.split("\t")  # The file is tab-delimited. "\t" means "tab character"
-      scores[term] = int(score)  # Convert the score to an integer.
-
-    tweet_file = open(sys.argv[2])
-    
-    for line in tweet_file:
-        tweet_sentiment_score = 0
-        json_response = json.loads(line)
-        tweet_text = json_response.get('text', '')
-        tweet_text_list = tweet_text.split(" ")
-        last_tweet_word = ""
-        for tweet_word in tweet_text_list:
-            tweet_sentiment_score += scores.get(tweet_word,0)
-        for tweet_word in tweet_text_list:
-            if tweet_sentiment_score and tweet_word not in scores:
-                term , score = tweet_word, tweet_sentiment_score
-                new_terms[term] = tweet_sentiment_score
-        for tweet_word in tweet_text_list:
-            if scores.get(tweet_word,0):
-                print tweet_word.encode('utf-8'), scores.get(tweet_word,0)
-            elif new_terms.get(tweet_word,0):
-                print tweet_word.encode('utf-8'), new_terms.get(tweet_word,0)
+def sentiment(afindict,status):
+	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
+	statusdict={}
 	
+	for s in status:
+		score=0
+		for a in afindict.keys():
+			aa='\\b'+a+'\\b'
+			match=re.search((aa),s)
+			if match:
+				score=score+afindict[a]
+				#print a
+			else:
+				pass
+		#print s+'----->'+str(score)
+#		print score
+		#print '\n'
+        return score
+	#print statusdict
+			
+	
+
+def nonsentscore(afindict,status):
+	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
+    scoredict={}
+    nid=0
+    for s in status:
+        score=0
+        for a in afindict.keys():
+            aa='\\b'+a+'\\b'
+            match=re.search((aa),s)
+            if match:
+                score=score+afindict[a]
+            else:
+                pass
+        scoredict[nid]=score
+        nid=nid+1
+       
+    nafin={}   	
+    nid2=0
+    for s in status:
+        nscore=scoredict[nid2]
+	ssplit=s.split(' ')
+	nlen=float(len(ssplit))
+	wscore=float(nscore/nlen)
+        for s in ssplit:
+            if s not in afindict.keys():
+                nword=s
+                nafin[nword]=wscore
+            else:
+                pass
+            
+        nid2=nid2+1    
+
+#		print score
+		#print '\n'
+    for n in nafin:
+        print n, nafin[n]
+    return scoredict
+	#print statusdict
+			
+	
+def afin():
+	#parses afin file
+	#file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
+	file =open(sys.argv[1])
+	scores={} # initialize an empty dictionary
+	ascores={}
+	for line in file:
+		#note that when you have a multiple variable set. it will iterate over the variable for each line
+		term, score = line.split("\t") # The file is tab-delimted. "\t" means "tab character".
+		scores[term]=int(score) #convert the score to an integer.
+		ascores=scores.items() # print every (term,score) pair in the dictionary
+	return scores
+def main():
+    #finds sentiment score for the entire tweet. Divides the sentiment score by the amount of words, then assigns the weighted score to the non-afinn words    
+#sent_file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
+    sent_file = open(sys.argv[1])
+    #sent_file=open('C:\dex\datascience\cert\AFINN-111.txt')	
+    #tweet_file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\practweet.txt')
+    #tweet_file=open('C:\dex\datascience\cert\practweet.txt')
+    tweet_file = open(sys.argv[2])
+    #hw()
+    #lines(sent_file)
+    #lines(tweet_file)
+    afindict={}
+    afindict=afin()
+    #print afindict.()
+    tweets={}
+    tweets=json_parse()
+    status=tweet_txt(tweets)
+#    sentiment(afindict,status)
+    nonsentscore(afindict,status)
+	
+
 if __name__ == '__main__':
     main()
