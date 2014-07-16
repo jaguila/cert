@@ -32,12 +32,89 @@ def tweet_txt(tweets):
 	return status
 def tweet_state(tweets,score):
 	location=[]
+	nid=0
+	ldict={}
+	states = {
+        'AK': 'Alaska',
+        'AL': 'Alabama',
+        'AR': 'Arkansas',
+        'AS': 'American Samoa',
+        'AZ': 'Arizona',
+        'CA': 'California',
+        'CO': 'Colorado',
+        'CT': 'Connecticut',
+        'DC': 'District of Columbia',
+        'DE': 'Delaware',
+        'FL': 'Florida',
+        'GA': 'Georgia',
+        'GU': 'Guam',
+        'HI': 'Hawaii',
+        'IA': 'Iowa',
+        'ID': 'Idaho',
+        'IL': 'Illinois',
+        'IN': 'Indiana',
+        'KS': 'Kansas',
+        'KY': 'Kentucky',
+        'LA': 'Louisiana',
+        'MA': 'Massachusetts',
+        'MD': 'Maryland',
+        'ME': 'Maine',
+        'MI': 'Michigan',
+        'MN': 'Minnesota',
+        'MO': 'Missouri',
+        'MP': 'Northern Mariana Islands',
+        'MS': 'Mississippi',
+        'MT': 'Montana',
+        'NA': 'National',
+        'NC': 'North Carolina',
+        'ND': 'North Dakota',
+        'NE': 'Nebraska',
+        'NH': 'New Hampshire',
+        'NJ': 'New Jersey',
+        'NM': 'New Mexico',
+        'NV': 'Nevada',
+        'NY': 'New York',
+        'OH': 'Ohio',
+        'OK': 'Oklahoma',
+        'OR': 'Oregon',
+        'PA': 'Pennsylvania',
+        'PR': 'Puerto Rico',
+        'RI': 'Rhode Island',
+        'SC': 'South Carolina',
+        'SD': 'South Dakota',
+        'TN': 'Tennessee',
+        'TX': 'Texas',
+        'UT': 'Utah',
+        'VA': 'Virginia',
+        'VI': 'Virgin Islands',
+        'VT': 'Vermont',
+        'WA': 'Washington',
+        'WI': 'Wisconsin',
+        'WV': 'West Virginia',
+        'WY': 'Wyoming'
+	}
+	states={v:k for k,v in states.items()}
 	for t in tweets:
-		location.append(t['user']['location'])
-	print location
+		#location.append(t['user']['location'])
+		try:
+			if t['place']['country_code']=='US':
+				state=t['place']['full_name']
+				if state.split(', ')[1]=='USA':
+					ldict[nid]=str(states[state.split(', ')[0]])
+					#print state.split(', ')[1]
+				else:
+					ldict[nid]=state.split(', ')[1]
+			else:
+				pass
+		except TypeError:
+			pass
+		nid=nid+1
+	#for s in score:
+		
+	print ldict
 	
 	return location
-	
+
 
 def sentiment(afindict,status):
 	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
@@ -133,6 +210,9 @@ def afin():
 		scores[term]=int(score) #convert the score to an integer.
 		ascores=scores.items() # print every (term,score) pair in the dictionary
 	return scores
+
+def lines(fp):
+    print str(len(fp.readlines()))
 def main():
     #finds sentiment score for the entire tweet. Divides the sentiment score by the amount of words, then assigns the weighted score to the non-afinn words    
 	#sent_file = open('C:\Users\Dex\Documents\IPython Notebooks\cert\AFINN-111.txt')
@@ -143,17 +223,17 @@ def main():
 	tweet_file = open(sys.argv[2])
     #hw()
     #lines(sent_file)
-    #lines(tweet_file)
+	lines(tweet_file)
 	#afindict={}
 	afindict=afin()
     #print afindict.()
 	tweets={}
 	tweets=json_parse()
 	status=tweet_txt(tweets)
-	sentiment(afindict,status)
+	score=sentiment(afindict,status)
 	#nonsentscore(afindict,status)
 	#freq=frequency(status)
-	tweet_state(tweets)
+	tweet_state(tweets,score)
 	
 	
 
