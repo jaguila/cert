@@ -94,7 +94,7 @@ def hashcount(hashtags):
 			hashdict[h]=1.0
 	shashdict=sorted(hashdict.items(), key=hashdict.get)
 
-	for s in shashdict[0:9]:
+	for s in shashdict[0:10]:
 		tag,count=s
 		print tag,count
 		

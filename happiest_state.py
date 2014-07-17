@@ -111,10 +111,28 @@ def tweet_state(tweets,score):
 		nid=nid+1
 	#for s in score:
 		
-	print ldict
+	#print ldict
 	
-	return location
-
+	return ldict
+def scorebystate(ldict, score):
+    nid=0
+    sstate={}
+    for l in ldict:
+        if ldict[l] in sstate:
+            sstate[ldict[l]]=int(score[nid]+sstate[ldict[l]])
+        else:
+            sstate[ldict[l]]=int(score[nid])
+        nid+=1
+#    ans=max(sstate.values())
+ #   print sstate.key(7)
+  
+    sstate=sorted(sstate.items(), key=sstate.get)
+    sstate1={}
+    for s in sstate:
+        stateab,sent=s
+        sstate1[stateab]=sent
+    for s in sstate1:
+        print s,sstate1[s]
 
 def sentiment(afindict,status):
 	#iterates over statuses then iterates over afindictionary to see if the entry in afindictionary is in the status. Resets score after each new status
@@ -154,7 +172,7 @@ def frequency(status):
 		totfreq=totfreq+freqdict[f]
 	for f in freqdict:	
 		perc=float(freqdict[f])/float(totfreq)
-		print f, perc
+#		print f, perc
 		
 	return freqdict		
 	
@@ -233,7 +251,8 @@ def main():
 	score=sentiment(afindict,status)
 	#nonsentscore(afindict,status)
 	#freq=frequency(status)
-	tweet_state(tweets,score)
+       	ldict=tweet_state(tweets,score)
+        scorebystate(ldict,score)
 	
 	
 
