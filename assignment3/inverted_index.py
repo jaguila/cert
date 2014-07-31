@@ -20,8 +20,11 @@ def reducer(key, list_of_values):
     #total = 0
     #for v in list_of_values:
     #  total += v
-	  
+    #makes list have distinct values
+    list_of_values=list(set(list_of_values))
     mr.emit((key, list_of_values))
+
+    
 
 # Part 4
 inputdata = open(sys.argv[1])
